@@ -21,21 +21,26 @@ def parse_paper(input_filename):
 
     return dots, folds, width, height
 
+
 def hflip_dots(dots, width):
     return set((width-x, y) for x, y in dots)
 
+
 def vflip_dots(dots, height):
     return set((x, height-y) for x, y in dots)
+
 
 def xfold_dots(line, dots):
     dots = set((x, y) if x < line else (2*line - x, y) for x, y in dots)
     width = max(x for x, y in dots)
     return dots, width
 
+
 def yfold_dots(line, dots):
     dots = set((x, y) if y < line else (x, 2*line - y) for x, y in dots)
     height = max(y for x, y in dots)
     return dots, height
+
 
 def print_dots(dots):
     width = max(x for x, y in dots)
@@ -54,6 +59,7 @@ def print_dots(dots):
         s += "\n"
     print(s)
 
+
 def apply_folds(dots, folds):
     width = max(x for x, y in dots)
     height = max(y for x, y in dots)
@@ -69,6 +75,7 @@ def apply_folds(dots, folds):
                 line = height - line
             dots, height = yfold_dots(line, dots)
     return dots
+
 
 dots, folds, width, height = parse_paper('13input')
 
