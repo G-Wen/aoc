@@ -1,8 +1,8 @@
 def parse_paper(input_filename):
-    dots = []
+    dots = set()
     folds = []
-    max_x = -1
-    max_y = -1
+    width = -1
+    height = -1
 
     with open(input_filename) as f:
         for line in f:
@@ -12,29 +12,28 @@ def parse_paper(input_filename):
             line = line.split(',')
             if len(line) == 2:
                 x, y = (int(line[0]), int(line[1]))
-                max_x = max(x, max_x)
-                max_y = max(y, max_y)
-                dots.append((x, y))
+                width = max(x, width)
+                height = max(y, height)
+                dots.add((x, y))
             else:
                 line = line[0].split()[-1].split('=')
                 folds.append((line[0], int(line[1])))
 
-    return dots, folds, max_x, max_y
+    return dots, folds, width, height
 
 def hflip_dots(dots, width):
-    return [(width-x, y) for x, y in dots]
-
+    return set((width-x, y) for x, y in dots)
 
 def vflip_dots(dots, height):
-    return [(x, height-y) for x, y in dots]
+    return set((x, height-y) for x, y in dots)
 
 def xfold_dots(line, dots):
-    dots = [(x, y) if x < line else (2*line - x, y) for x, y in dots]
+    dots = set((x, y) if x < line else (2*line - x, y) for x, y in dots)
     width = max(x for x, y in dots)
     return dots, width
 
 def yfold_dots(line, dots):
-    dots = [(x, y) if y < line else (x, 2*line - y) for x, y in dots]
+    dots = set((x, y) if y < line else (x, 2*line - y) for x, y in dots)
     height = max(y for x, y in dots)
     return dots, height
 
@@ -75,9 +74,9 @@ dots, folds, width, height = parse_paper('13input')
 
 # Part 1
 dots = apply_folds(dots, folds[:1])
-print(f"dots after 1 fold: {len(dict.fromkeys(dots))}")
+print(f"dots after 1 fold: {len(dots)}")
 
 # Part 2
 dots = apply_folds(dots, folds[1:])
-print_dots(dots)  # UFRZKAUZ
+print_dots(dots)
 
