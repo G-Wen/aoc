@@ -12,7 +12,7 @@ def parse_input(input_filename):
         for line in f:
             start, end = line.strip().split(' -> ')
             rules[start] = (start[0]+end, end+start[1])
-        return pair_dict, rules, polymer
+        return pair_dict, rules, polymer[-1]
 
 
 def step(pair_dict, rules):
@@ -32,24 +32,22 @@ def polymer_insertion(pair_dict, rules, steps):
     return pair_dict
 
 
-def diff_calc(pair_dict, end_char):
+def diff_calc(pair_dict, last_char):
     counter = defaultdict(int)
     for pair in pair_dict:
         counter[pair[0]] += pair_dict[pair]
-    counter[end_char] += 1
-    counter = sorted(counter.items(), key=lambda x: x[1])
-    most_common_count = counter[-1][1]
-    least_common_count = counter[0][1]
-    return most_common_count - least_common_count
+    counter[last_char] += 1
+    counter = sorted(counter.values())
+    return counter[-1] - counter[0]
 
 
-pair_dict, rules, polymer = parse_input('14input')
+pair_dict, rules, last_char = parse_input('14input')
 
 # Part 1
 pair_dict = polymer_insertion(pair_dict, rules, 10)
-print(diff_calc(pair_dict, polymer[-1]))
+print(diff_calc(pair_dict, last_char))
 
 # Part 2
 pair_dict = polymer_insertion(pair_dict, rules, 30)
-print(diff_calc(pair_dict, polymer[-1]))
+print(diff_calc(pair_dict, last_char))
 
