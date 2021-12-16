@@ -1,17 +1,17 @@
+from functools import reduce
+
+
 def parse_input(input_filename):
     with open(input_filename) as f:
         return f.read().strip()
 
 
-def hex_to_binary(hex):
-    return str(bin(int('1' + hex, 16)))[3:]
+def hex_to_binary(num):
+    return bin(int('1' + num, 16))[3:]
 
 
-def bits_to_decimal(bits):
-    num = 0
-    for i, b in enumerate(reversed(bits)):
-        num += (2**i)*int(b)
-    return num
+def binary_to_decimal(num):
+    return int(num, 2)
 
 
 def parse_literal(string):
@@ -31,12 +31,12 @@ def parse_operator(string):
     length_type_id, string = string[0], string[1:]
     if length_type_id == '0':
         length_in_bits, string = string[:15], string[15:]
-        length = bits_to_decimal(length_in_bits)
+        length = binary_to_decimal(length_in_bits)
         sub_packets_string, remainder = string[:length], string[length:]
         sub_packets, _ = parse_sub_packets(sub_packets_string)
     else:
         total_packets_in_bits, string = string[:11], string[11:]
-        total_number_of_packets = bits_to_decimal(total_packets_in_bits)
+        total_number_of_packets = binary_to_decimal(total_packets_in_bits)
         sub_packets, remainder = parse_sub_packets_by_count(string, total_number_of_packets)
 
     return sub_packets, remainder
@@ -61,11 +61,11 @@ def parse_sub_packets_by_count(string, total_number_of_packets):
 
 
 def parse_packet(string):
-    version, type, string = string[:3], bits_to_decimal(string[3:6]), string[6:]
+    version, type, string = string[:3], binary_to_decimal(string[3:6]), string[6:]
     packet = {'version': version, 'type': type}
     if type == 4:
         literal, string = parse_literal(string)
-        packet['literal'] = bits_to_decimal(literal)
+        packet['literal'] = binary_to_decimal(literal)
     else:
         sub_packets, string = parse_operator(string)
         packet['sub_packets'] = sub_packets
@@ -73,7 +73,7 @@ def parse_packet(string):
 
 
 def sum_versions(packet_tree):
-    version = bits_to_decimal(packet_tree['version'])
+    version = binary_to_decimal(packet_tree['version'])
     if 'sub_packets' not in packet_tree:
         return version
     else:
@@ -84,10 +84,7 @@ def eval_packet(packet):
     if packet['type'] == 0:
         return sum(eval_packet(p) for p in packet['sub_packets'])
     elif packet['type'] == 1:
-        prod = 1
-        for p in packet['sub_packets']:
-            prod *= eval_packet(p)
-        return prod
+        return reduce(lambda a, b: a*b, (eval_packet(p) for p in packet['sub_packets']))
     elif packet['type'] == 2:
         return min(eval_packet(p) for p in packet['sub_packets'])
     elif packet['type'] == 3:
