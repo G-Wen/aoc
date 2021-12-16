@@ -61,7 +61,7 @@ def parse_sub_packets_by_count(string, total_number_of_packets):
 
 
 def parse_packet(string):
-    version, type, string = string[:3], binary_to_decimal(string[3:6]), string[6:]
+    version, type, string = binary_to_decimal(string[:3]), binary_to_decimal(string[3:6]), string[6:]
     packet = {'version': version, 'type': type}
     if type == 4:
         literal, string = parse_literal(string)
@@ -73,7 +73,7 @@ def parse_packet(string):
 
 
 def sum_versions(packet_tree):
-    version = binary_to_decimal(packet_tree['version'])
+    version = packet_tree['version']
     if 'sub_packets' not in packet_tree:
         return version
     else:
