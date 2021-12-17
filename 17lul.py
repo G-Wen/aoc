@@ -33,15 +33,12 @@ target_min_x, target_max_x, target_min_y, target_max_y = 248, 285, -85, -56
 
 print(f"Maximum y-position reached: {int(((target_min_y+1)**2 + target_min_y+1)/2)}")
 
-velos = set()
+velos = 0
 for x in range(22, 285+1):
     for y in range(-85, 84+1):
-        x_speeds = [max(x-i, 0) for i in range(170)]
-        y_speeds = [y-i for i in range(170)]
-        x_traj = accumulate(x_speeds)
-        y_traj = accumulate(y_speeds)
-        trajectory = list(zip(x_traj, y_traj))
+        speeds = [(max(x-i, 0), y-i) for i in range(170)]
+        trajectory = list(accumulate(speeds, lambda a, b: (a[0] + b[0], a[1] + b[1])))
         filtered = list(filter(lambda pos: target_min_x <= pos[0] <= target_max_x and target_min_y <= pos[1] <= target_max_y, trajectory))
         if filtered:
-            velos.add((x, y))
-print(f"Number of unique trajectories: {len(velos)}")
+            velos += 1
+print(f"Number of unique trajectories: {velos}")
