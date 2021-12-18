@@ -13,8 +13,8 @@ such that the shuttle will at some point land within the y-component of the targ
 Notice that for each positive initial velocity V we will be at y-position 0 after 2V+1 steps. 
 Thus after 2V+2 steps the y-position will be -(V+1), and each further step will be lower. 
 
-For cases where the target is below the largest V we can select that will fall 
-into the target's y-range, lower_y, upper_y], is V=(lower_y+1).
+For cases where the target is below the horizontal, the largest V we can select that will fall 
+into the target's y-range, [lower_y, upper_y], is V=(lower_y+1).
 
 From there calculate the peak reached by the shuttle: T(V = lower_y+1) = (V^2 + V) / 2
 
