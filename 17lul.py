@@ -29,16 +29,12 @@ This path takes 2V+2 steps as we have calculated before.
 Use these bounds to do a brute force search. 
 """
 
-target_min_x, target_max_x, target_min_y, target_max_y = 248, 285, -85, -56
-
-print(f"Maximum y-position reached: {int(((target_min_y+1)**2 + target_min_y+1)/2)}")
-
-velos = 0
+target_min_x, target_max_x, target_min_y, target_max_y, trajectories = 248, 285, -85, -56, 0
 for x in range(22, 285+1):
     for y in range(-85, 84+1):
-        speeds = [(max(x-i, 0), y-i) for i in range(170)]
-        trajectory = list(accumulate(speeds, lambda a, b: (a[0] + b[0], a[1] + b[1])))
-        filtered = list(filter(lambda pos: target_min_x <= pos[0] <= target_max_x and target_min_y <= pos[1] <= target_max_y, trajectory))
-        if filtered:
-            velos += 1
-print(f"Number of unique trajectories: {velos}")
+        trajectory = list(accumulate(((max(x-i, 0), y-i) for i in range(170)), lambda a, b: (a[0] + b[0], a[1] + b[1])))
+        if list(filter(lambda pos: target_min_x <= pos[0] <= target_max_x and target_min_y <= pos[1] <= target_max_y, trajectory)):
+            trajectories += 1
+
+print(f"Maximum y-position reached: {int(((target_min_y+1)**2 + target_min_y+1)/2)}")
+print(f"Number of unique trajectories: {trajectories}")
