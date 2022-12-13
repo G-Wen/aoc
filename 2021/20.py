@@ -64,7 +64,7 @@ def enhance_image(image, xdim, ydim, steps):
     return image, xdim, ydim
 
 
-iea, image, xdim, ydim= parse_input('20input')
+iea, image, xdim, ydim = parse_input('20input')
 
 image, xdim, ydim = enhance_image(image, xdim, ydim, 2)
 print(f"Part 1: {sum([int(v) for v in image.values()])}")

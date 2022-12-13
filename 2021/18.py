@@ -109,6 +109,7 @@ def add_snailfish(left, right):
 
 
 def get_parts(snailfish_number):
+    snailfish_number = snailfish_number[1:-1]
     depth = 0
     left = []
     while snailfish_number:
@@ -129,10 +130,10 @@ class SnailfishTree:
             self.right = None
             self.magnitude = int(snailfish_number)
         else:
-            left, right = get_parts(snailfish_number[1:-1])
+            left, right = get_parts(snailfish_number)
             self.left = SnailfishTree(left)
             self.right = SnailfishTree(right)
-            self.magnitude = 3*self.left.magnitude + 2* self.right.magnitude
+            self.magnitude = 3*self.left.magnitude + 2*self.right.magnitude
 
 
 def snailfish_magnitude(snailfish_number):
